@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import './App.css'
+
+import {MapContainer, TileLayer, GeoJSON} from 'react-leaflet'
+import mapProvider from "./mapProvider";
+import israelGeoJson from './layers/Israel Marine Cables.json'
+
+const center = [32.109333, 34.85549]
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <MapContainer id="map" center={center} zoom={9} >
+            <TileLayer
+                url={mapProvider.url}
+                attribution={mapProvider.attribution}
+            />
+            <GeoJSON data={israelGeoJson}/>
+        </MapContainer>
+    );
 }
 
 export default App;
