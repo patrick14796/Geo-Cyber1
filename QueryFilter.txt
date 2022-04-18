@@ -1,0 +1,18 @@
+var result = [];
+	for (var i = 0; i < telecomTerminalsGeoJson.features.length; i++) {
+		var found = false;
+		for (var j = 0; j < result.length; j++) {
+			if(result[j].properties.Name == telecomTerminalsGeoJson.features[i].properties.Name && result[j].properties.city_id == telecomTerminalsGeoJson.features[i].properties.city_id)
+			{
+				found = true;
+				result[j].properties.cable_id = result[j].properties.cable_id.concat(",",telecomTerminalsGeoJson.features[i].properties.cable_id);
+				console.log("find")
+			}
+		}
+		if (!found) {
+			result.push(telecomTerminalsGeoJson.features[i]);
+		  }
+	}
+
+	var json = JSON.stringify(result);
+	console.log(json)
