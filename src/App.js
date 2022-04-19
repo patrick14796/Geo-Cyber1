@@ -6,25 +6,16 @@ import mapProvider from "./mapProvider";
 import israelGeoJson from './layers/Israel Marine Cables.json'
 import telecomTerminals from './layers/TelecomTerminals2018.json.json'
 import React from 'react';
-import L from 'leaflet';
 
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import markerIcons from './icons/markerIcons'
 
-const israeliCableLayerArray = []
-
-
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
 
 const center = [32.109333, 34.85549]
 
-function App() {
+const israeliCableLayerArray = []
+const telecomTerminalLayerArray = []
 
+function App() {
 
     const onEachIsraeliCable = (cable, layer) => {
         const cableName = cable.properties.Name
@@ -44,6 +35,22 @@ function App() {
         layer.cableID = cableID
         israeliCableLayerArray.push(layer)
 
+        layer.on('mouseover', () => {
+            telecomTerminalLayerArray.forEach((item) => {
+                let cableArray = item.cableID.split(',')
+
+                if(cableArray.includes(cableID)) {
+                    item.setIcon(markerIcons.greenIcon)
+                }
+            })
+        })
+
+        layer.on('mouseout', () => {
+            telecomTerminalLayerArray.forEach((item) => {
+                item.setIcon(markerIcons.blueIcon)
+            })
+        })
+
 
     }
 
@@ -52,18 +59,22 @@ function App() {
         const terminalName = terminal.properties.Name
         const connectedCables = terminal.properties.cable_id
         const CityID = terminal.properties.city_id
-        const TerminalType = terminal.geometry.type
         const terminalData = `Terminal name: ${terminalName}<br/>
 		Cables Connected: ${connectedCables}<br/>
-		City ID: ${CityID}<br/>
-		Type: ${TerminalType}`
-        layer.bindTooltip(terminalData, {sticky: true})
+		City ID: ${CityID}`
 
+        layer.bindTooltip(terminalData, {sticky: true})
+        layer.setIcon(markerIcons.blueIcon)
+
+
+        layer.cableID = connectedCables
+        telecomTerminalLayerArray.push(layer)
 
         const originalColor = israeliCableLayerArray[0].options.color
 
-        layer.on('mouseover', () => {
 
+
+        layer.on('mouseover', () => {
             let cableArray = connectedCables.split(',')
 
             israeliCableLayerArray.forEach((item) => {
@@ -72,6 +83,7 @@ function App() {
                 }
             })
         })
+
         layer.on('mouseout', () => {
             israeliCableLayerArray.forEach((item) => {
                 item.setStyle({color: originalColor})
