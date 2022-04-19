@@ -3,11 +3,11 @@ import './App.css'
 
 
 
-import {MapContainer, TileLayer, GeoJSON,Marker, Popup} from 'react-leaflet'
+import {MapContainer, TileLayer, GeoJSON} from 'react-leaflet'
 import mapProvider from "./mapProvider";
 import israelGeoJson from './layers/Israel Marine Cables.json'
 import telecomTerminals from './layers/TelecomTerminals2018.json.json'
-import React, { Component } from 'react';
+import React from 'react';
 import L from 'leaflet';
 
 
